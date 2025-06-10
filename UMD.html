@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loveables Customization App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts - Roboto (main font) and Balsamiq Sans (for bubbly text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for menu animation and draggable elements */
+        body {
+            font-family: 'Roboto', sans-serif; /* Changed font to Roboto */
+            overflow: hidden; /* Prevent body scroll when canvas is large */
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%);
+            background-color: #1A2B7C; /* FOX blue */
+            color: white;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .draggable {
+            cursor: grab;
+            position: absolute;
+            user-select: none; /* Prevent text selection during drag */
+            touch-action: none; /* Disable default touch actions for draggable elements */
+            z-index: 10;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+        .widget-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: nwse-resize;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 4px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Custom button styling for sidebar uploads */
+        .sidebar-upload-btn {
+            @apply flex items-center justify-center w-full p-3 rounded-md font-semibold transition-colors duration-200 ease-in-out border border-white text-white bg-transparent hover:bg-white hover:text-blue-800;
+        }
+        .sidebar-dropdown-toggle {
+            @apply w-full p-3 bg-white text-blue-800 rounded-md text-left font-semibold flex items-center justify-between transition-colors duration-200 ease-in-out;
+        }
+        .sidebar-dropdown-content {
+            @apply mt-2 p-2 bg-blue-700 rounded-md shadow-inner max-h-48 overflow-y-auto;
+        }
+        .sidebar-dropdown-item {
+            @apply flex items-center p-2 text-white hover:bg-blue-600 rounded-md cursor-pointer transition-colors duration-100;
+        }
+        /* Specific style for line widget to allow flexible sizing */
+        .widget-line-content {
+            width: 100%;
+            height: 100%;
+            background-color: inherit; /* Inherit color from parent widget */
+        }
+        /* Ensure modal always has precedence */
+        #custom-modal {
+            z-index: 9999; /* Increased z-index */
+        }
+        /* Specific font for "Under Monitor Display Configuration" */
+        .bubbly-font {
+            font-family: 'Balsamiq Sans', cursive;
+        }
+    </style>
+</head>
+<body class="flex h-screen bg-gray-100 text-gray-800">
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-64 shadow-lg p-4 z-50 overflow-y-auto rounded-r-lg flex flex-col">
+        <!-- Hamburger Icon (Moved to header for now, but kept in mind for possible design shift) -->
+        <!-- FOX Logo and Title -->
+        <div class="flex items-center mb-6 px-2">
+            <img src="https://placehold.co/40x40/FFFFFF/1A2B7C?text=FOX" alt="FOX Logo" class="h-10 mr-2 rounded-md">
+            <span class="text-4xl font-extrabold">FOX</span> <!-- Increased size and boldness for FOX -->
+        </div>
+        <p class="text-sm text-gray-300 mb-6 text-center bubbly-font">Under Monitor Display Configuration</p>
+
+
+        <!-- Widget Options - adapted to new icons -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <!-- Text Box Widget -->
+            <div id="widget-text" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-text-height text-3xl mb-2"></i> <!-- 'T' icon -->
+                <span class="text-sm font-semibold">Text</span>
+            </div>
+            <!-- Realtime Clock Widget -->
+            <div id="widget-clock" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-clock text-3xl mb-2"></i>
+                <span class="text-sm font-semibold">Clock</span>
+            </div>
+            <!-- Graphic Line Widget -->
+            <div id="widget-line" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-grip-lines text-3xl mb-2"></i>
+                <span class="text-sm font-semibold">Line</span>
+            </div>
+            <!-- Weather Widget (Cloud icon) -->
+            <div id="widget-weather" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-cloud-sun text-3xl mb-2"></i>
+                <span class="text-sm font-semibold">Weather</span>
+            </div>
+            <!-- Temperature Widget (Location Pin icon) -->
+            <div id="widget-temperature" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-map-pin text-3xl mb-2"></i>
+                <span class="text-sm font-semibold">Temp</span>
+            </div>
+            <!-- New widget: Edit/Drawing (Pencil icon) - Replaced old upload media -->
+            <div id="widget-edit" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out">
+                <i class="fas fa-pencil-alt text-3xl mb-2"></i>
+                <span class="text-sm font-semibold">Edit</span>
+            </div>
+        </div>
+
+        <!-- Upload Buttons (New structure) -->
+        <div class="space-y-3 mb-6">
+            <button id="upload-logo-btn" class="sidebar-upload-btn">
+                <i class="fas fa-upload mr-2"></i> Upload LOGO
+                <input type="file" id="logo-upload-input" class="hidden" accept="image/*">
+            </button>
+            <button id="upload-background-btn" class="sidebar-upload-btn">
+                <i class="fas fa-upload mr-2"></i> Upload BACKGROUND
+                <input type="file" id="background-upload-input" class="hidden" accept="image/*">
+            </button>
+        </div>
+
+        <!-- Choose Logo Dropdown (formerly Uploaded Media) -->
+        <div class="mb-4">
+            <button id="logo-dropdown-toggle" class="sidebar-dropdown-toggle">
+                Choose Logo
+                <i class="fas fa-chevron-down ml-2 transform rotate-0 transition-transform duration-200 ease-in-out"></i>
+            </button>
+            <div id="logo-dropdown-content" class="hidden sidebar-dropdown-content">
+                <!-- Uploaded logo items will be appended here -->
+                <p class="text-sm text-gray-300">No logos uploaded yet.</p>
+            </div>
+        </div>
+
+        <!-- Choose Background Dropdown (for uploaded backgrounds) -->
+        <div class="mb-6">
+            <button id="background-dropdown-toggle" class="sidebar-dropdown-toggle">
+                Choose Background
+                <i class="fas fa-chevron-down ml-2 transform rotate-0 transition-transform duration-200 ease-in-out"></i>
+            </button>
+            <div id="background-dropdown-content" class="hidden sidebar-dropdown-content">
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#93c5fd"></button>
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#86efac"></button>
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#fcd34d"></button>
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#d8b4fe"></button>
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#fbcfe8"></button>
+                    <button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#d1d5db"></button>
+                </div>
+                <div class="mt-4">
+                    <label for="custom-bg-color" class="block text-sm font-medium text-gray-300 mb-1">Custom Color:</label>
+                    <input type="color" id="custom-bg-color" value="#ffffff" class="w-full h-10 rounded-md border border-gray-300 cursor-pointer">
+                </div>
+                <!-- Add "Remove Filter" button -->
+                <button id="remove-bg-filter-btn" class="sidebar-upload-btn mt-4">
+                    <i class="fas fa-ban mr-2"></i> Remove Background
+                </button>
+                <!-- Section for uploaded backgrounds -->
+                <div id="uploaded-backgrounds-list" class="mt-4 border-t border-blue-600 pt-2">
+                    <p class="text-sm text-gray-300">No backgrounds uploaded yet.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Action Buttons -->
+        <div class="mt-auto flex flex-col space-y-3">
+            <button id="save-screen-btn" class="p-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-md shadow-lg transition-colors duration-200 ease-in-out">
+                Save Preset
+            </button>
+            <button id="clear-screen-btn" class="p-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-md shadow-lg transition-colors duration-200 ease-in-out">
+                Clear Screen
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col ml-0 transition-all duration-300 ease-in-out" id="main-content-area">
+        <!-- Header with Hamburger and Tabs -->
+        <header class="bg-blue-800 shadow-md p-4 flex items-center rounded-bl-lg">
+            <!-- Hamburger Icon -->
+            <button id="menu-toggle" class="p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ease-in-out mr-4">
+                <i class="fas fa-bars text-xl text-white"></i>
+            </button>
+
+            <!-- Tabs -->
+            <div class="flex space-x-1 bg-blue-900 p-1 rounded-lg shadow-inner">
+                <button id="tab-workspace" class="tab-button px-5 py-2 text-md font-semibold text-blue-800 rounded-md transition-all duration-200 ease-in-out bg-white shadow">
+                    Preview
+                </button>
+                <button id="tab-background" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out">
+                    Background
+                </button>
+                <button id="tab-presets" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out">
+                    Presets
+                </button>
+                <button id="tab-room" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out">
+                    Room
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content (Canvas for Workspace) -->
+        <main class="flex-1 relative overflow-hidden"> <!-- Removed p-4 from here -->
+            <div id="workspace-tab-content" class="tab-content active h-full w-full bg-white rounded-lg shadow-xl overflow-hidden relative border border-gray-200 p-4"> <!-- Added p-4 here -->
+                <!-- Drop target area for widgets -->
+                <div id="canvas" class="h-full w-full relative overflow-hidden"> <!-- Removed p-4 from here, it's now on workspace-tab-content -->
+                    <!-- Widgets will be appended here -->
+                </div>
+            </div>
+
+            <div id="background-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto">
+                <h2 class="text-3xl font-bold mb-4 text-center text-indigo-700">Background Selection</h2>
+                <p class="text-gray-600 text-center">Here you can select and manage backgrounds. Use the sidebar to upload new ones.</p>
+            </div>
+
+            <div id="presets-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto">
+                <h2 class="text-3xl font-bold mb-4 text-center text-indigo-700">Saved Presets</h2>
+                <div id="presets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center text-gray-500">
+                        <p>No presets saved yet. Save your current workspace to see it here!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="room-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto">
+                <h2 class="text-3xl font-bold mb-4 text-center text-indigo-700">Room Collaboration</h2>
+                <p class="text-gray-600 text-center">This section is under development and will support collaborative features.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation/Alert Modal -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <h3 id="modal-title" class="text-xl font-bold mb-4"></h3>
+            <p id="modal-message" class="mb-6"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="modal-cancel-btn" class="px-5 py-2 bg-gray-300 hover:bg-gray-400 rounded-md font-semibold transition-colors duration-200">Cancel</button>
+                <button id="modal-confirm-btn" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-semibold transition-colors duration-200">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainContentArea = document.getElementById('main-content-area');
+            const canvas = document.getElementById('canvas');
+            const widgetItems = document.querySelectorAll('.widget-item');
+            
+            const uploadLogoBtn = document.getElementById('upload-logo-btn');
+            const logoUploadInput = document.getElementById('logo-upload-input');
+            const uploadBackgroundBtn = document.getElementById('upload-background-btn');
+            const backgroundUploadInput = document.getElementById('background-upload-input');
+
+            const logoDropdownToggle = document.getElementById('logo-dropdown-toggle');
+            const logoDropdownContent = document.getElementById('logo-dropdown-content');
+            const backgroundDropdownToggle = document.getElementById('background-dropdown-toggle');
+            const backgroundDropdownContent = document.getElementById('background-dropdown-content');
+            const colorButtons = backgroundDropdownContent.querySelectorAll('button[data-color]');
+            const customBgColorInput = document.getElementById('custom-bg-color');
+            const uploadedBackgroundsList = document.getElementById('uploaded-backgrounds-list');
+            const removeBgFilterBtn = document.getElementById('remove-bg-filter-btn'); // New button
+
+
+            const saveScreenBtn = document.getElementById('save-screen-btn');
+            const clearScreenBtn = document.getElementById('clear-screen-btn');
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Modal elements
+            const customModal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+            let activeDragElement = null; // Stores the actual DOM element being dragged/resized
+            let isDragging = false;
+            let isResizing = false;
+            let initialMouseX, initialMouseY;
+            let initialElementX, initialElementY; // Initial position of the element
+            let initialElementWidth, initialElementHeight;
+
+            let currentActiveWidget = null; // To keep track of the currently selected widget for deletion
+            let widgetCounter = 0; // Unique ID for each widget
+            const uploadedLogos = []; // Stores uploaded logo images { id, src, name }
+            const uploadedBackgrounds = []; // Stores uploaded background images { id, src, name }
+
+            // Initialize ResizeObserver for dynamic font sizing (especially for clock and temperature)
+            const resizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    if (entry.target.dataset.type === 'clock') {
+                        adjustClockFontSize(entry.target);
+                    } else if (entry.target.dataset.type === 'temperature') {
+                        adjustTemperatureDisplaySize(entry.target); // New function for temperature
+                    }
+                }
+            });
+
+            // --- Utility Functions ---
+
+            /**
+             * Displays a custom confirmation modal.
+             * @param {string} title - The title of the modal.
+             * @param {string} message - The message to display.
+             * @returns {Promise<boolean>} - Resolves true if confirmed, false if cancelled.
+             */
+            function showCustomModal(title, message) {
+                return new Promise(resolve => {
+                    modalTitle.textContent = title;
+                    modalMessage.textContent = message;
+                    customModal.classList.remove('hidden');
+
+                    const confirmHandler = () => {
+                        customModal.classList.add('hidden');
+                        modalConfirmBtn.removeEventListener('click', confirmHandler);
+                        modalCancelBtn.removeEventListener('click', cancelHandler);
+                        resolve(true);
+                    };
+
+                    const cancelHandler = () => {
+                        customModal.classList.add('hidden');
+                        modalConfirmBtn.removeEventListener('click', confirmHandler);
+                        modalCancelBtn.removeEventListener('click', cancelHandler);
+                        resolve(false);
+                    };
+
+                    modalConfirmBtn.addEventListener('click', confirmHandler);
+                    modalCancelBtn.addEventListener('click', cancelHandler);
+                });
+            }
+
+            // --- Sidebar and Menu Toggle ---
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                // Adjust main content margin based on sidebar state for better layout
+                if (sidebar.classList.contains('open')) {
+                    mainContentArea.style.marginLeft = '256px'; // w-64
+                } else {
+                    mainContentArea.style.marginLeft = '0';
+                }
+            });
+
+            // --- Dropdown Toggles ---
+
+            logoDropdownToggle.addEventListener('click', () => {
+                logoDropdownContent.classList.toggle('hidden');
+                logoDropdownToggle.querySelector('i').classList.toggle('rotate-180');
+            });
+
+            backgroundDropdownToggle.addEventListener('click', () => {
+                backgroundDropdownContent.classList.toggle('hidden');
+                backgroundDropdownToggle.querySelector('i').classList.toggle('rotate-180');
+            });
+
+            // --- Background Selection ---
+
+            colorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const color = button.dataset.color;
+                    setCanvasBackground(null, color); // Set color, clear image
+                });
+            });
+
+            customBgColorInput.addEventListener('input', (e) => {
+                setCanvasBackground(null, e.target.value); // Set custom color, clear image
+            });
+
+            // New: Remove Background button functionality
+            removeBgFilterBtn.addEventListener('click', () => {
+                setCanvasBackground(); // Call without arguments to reset
+            });
+
+
+            /**
+             * Applies an uploaded image as the canvas background.
+             * @param {string} imageUrl - Data URL of the image.
+             * @param {string} color - Background color to set (if no image).
+             */
+            function setCanvasBackground(imageUrl = null, color = null) {
+                if (imageUrl) {
+                    canvas.style.backgroundImage = `url('${imageUrl}')`;
+                    canvas.style.backgroundSize = 'cover';
+                    canvas.style.backgroundPosition = 'center';
+                    canvas.style.backgroundRepeat = 'no-repeat';
+                    canvas.style.backgroundColor = 'transparent'; // Ensure background color doesn't interfere
+                } else if (color) {
+                    canvas.style.backgroundImage = 'none';
+                    canvas.style.backgroundColor = color;
+                } else {
+                    // Reset to default if no image or color provided
+                    canvas.style.backgroundImage = 'none';
+                    canvas.style.backgroundColor = ''; // Or default gray-100 or white
+                }
+            }
+
+            // --- Global Drag & Drop Handlers (for existing widgets and new ones) ---
+            function onGlobalMouseMove(e) {
+                if (activeDragElement && (isDragging || isResizing)) { // Added activeDragElement check
+                    e.preventDefault(); // Prevent default browser drag behavior (e.g., text selection)
+
+                    let clientX = e.clientX;
+                    let clientY = e.clientY;
+                    // Handle touch events
+                    if (e.touches && e.touches.length > 0) {
+                        clientX = e.touches[0].clientX;
+                        clientY = e.touches[0].clientY;
+                    }
+
+                    if (isDragging) {
+                        let newX = clientX - initialMouseX + initialElementX;
+                        let newY = clientY - initialMouseY + initialElementY;
+
+                        // Clamp to canvas boundaries
+                        const canvasRect = canvas.getBoundingClientRect();
+                        const elementRect = activeDragElement.getBoundingClientRect();
+
+                        newX = Math.max(0, Math.min(newX, canvasRect.width - elementRect.width));
+                        newY = Math.max(0, Math.min(newY, canvasRect.height - elementRect.height));
+
+                        activeDragElement.style.left = `${newX}px`;
+                        activeDragElement.style.top = `${newY}px`;
+                    } else if (isResizing) {
+                        let newWidth = Math.max(50, initialElementWidth + (clientX - initialMouseX));
+                        let newHeight = Math.max(50, initialElementHeight + (clientY - initialMouseY));
+
+                        activeDragElement.style.width = `${newWidth}px`;
+                        activeDragElement.style.height = `${newHeight}px`;
+
+                        // Adjust content inside widget if applicable (e.g., image, textarea)
+                        const img = activeDragElement.querySelector('img');
+                        if (img) {
+                            img.style.width = '100%';
+                            img.style.height = '100%';
+                            img.style.objectFit = 'contain';
+                        }
+                        const textarea = activeDragElement.querySelector('textarea');
+                        if (textarea) {
+                            textarea.style.width = '100%';
+                            textarea.style.height = '100%';
+                        }
+                        // For line widget, adjust internal content if needed
+                        const lineContent = activeDragElement.querySelector('.widget-line-content');
+                        if (lineContent) {
+                            lineContent.style.width = '100%';
+                            lineContent.style.height = '100%';
+                        }
+                    }
+                }
+            }
+
+            function onGlobalMouseUp() {
+                // Clean up listeners
+                document.removeEventListener('mousemove', onGlobalMouseMove);
+                document.removeEventListener('touchmove', onGlobalMouseMove);
+                document.removeEventListener('mouseup', onGlobalMouseUp);
+                document.removeEventListener('touchend', onGlobalMouseUp);
+
+                if (isDragging) { // Only perform drop logic if it was a drag (either from sidebar or existing)
+                    if (activeDragElement.dataset.fromSidebar === 'true') { // If it was a new widget from sidebar
+                        const canvasRect = canvas.getBoundingClientRect();
+                        const elementRect = activeDragElement.getBoundingClientRect();
+
+                        // Check if widget is over canvas when dropped from sidebar
+                        if (elementRect.left >= canvasRect.left &&
+                            elementRect.right <= canvasRect.right &&
+                            elementRect.top >= canvasRect.top &&
+                            elementRect.bottom <= canvasRect.bottom) {
+
+                            // Adjust position relative to canvas
+                            activeDragElement.style.left = `${activeDragElement.offsetLeft - canvasRect.left}px`;
+                            activeDragElement.style.top = `${activeDragElement.offsetTop - canvasRect.top}px`;
+                            canvas.appendChild(activeDragElement);
+                            activeDragElement.style.opacity = '1';
+                            delete activeDragElement.dataset.fromSidebar; // Clean up flag
+                        } else {
+                            activeDragElement.remove(); // Remove if dropped outside canvas
+                        }
+                    }
+                }
+                
+                // Hide controls if not the actively selected widget after drag/resize ends
+                if (activeDragElement && activeDragElement !== currentActiveWidget) {
+                    activeDragElement.querySelector('.fa-trash-alt')?.classList.add('hidden');
+                    activeDragElement.querySelector('.widget-handle')?.classList.add('hidden');
+                    if (activeDragElement.dataset.type === 'line') {
+                         activeDragElement.querySelector('.fa-sync-alt')?.classList.add('hidden');
+                    }
+                }
+
+                isDragging = false;
+                isResizing = false;
+                activeDragElement = null; // Clear active element
+            }
+
+
+            /**
+             * Makes an element draggable and resizable within its parent.
+             * @param {HTMLElement} element - The element to make draggable/resizable.
+             */
+            function makeDraggableAndResizable(element) {
+                const trashIcon = document.createElement('i');
+                trashIcon.className = 'fas fa-trash-alt absolute top-2 right-2 text-red-500 cursor-pointer hidden p-1 bg-white rounded-full shadow-md z-20';
+                element.appendChild(trashIcon);
+
+                const resizeHandle = document.createElement('div');
+                resizeHandle.className = 'widget-handle hidden';
+                element.appendChild(resizeHandle);
+
+                // For line widget specifically, add rotate icon
+                let rotateIcon = null;
+                if (element.dataset.type === 'line') {
+                    rotateIcon = document.createElement('i');
+                    rotateIcon.className = 'fas fa-sync-alt absolute top-2 left-2 text-blue-500 cursor-pointer hidden p-1 bg-white rounded-full shadow-md z-20';
+                    element.appendChild(rotateIcon);
+
+                    rotateIcon.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent drag/resize on click
+                        let currentRotation = parseFloat(element.dataset.rotation || 0);
+                        currentRotation = (currentRotation + 90) % 360;
+                        element.style.transform = `rotate(${currentRotation}deg)`;
+                        element.dataset.rotation = currentRotation; // Store current rotation
+                    });
+                }
+
+                // Show/hide controls on hover
+                element.addEventListener('mouseenter', () => {
+                    trashIcon.classList.remove('hidden');
+                    resizeHandle.classList.remove('hidden');
+                    if (rotateIcon) rotateIcon.classList.remove('hidden');
+                });
+                element.addEventListener('mouseleave', () => {
+                    // Only hide if not currently dragging/resizing AND not the active selected widget
+                    if (!isDragging && !isResizing && element !== currentActiveWidget) {
+                        trashIcon.classList.add('hidden');
+                        resizeHandle.classList.add('hidden');
+                        if (rotateIcon) rotateIcon.classList.add('hidden');
+                    }
+                });
+
+                // Set active widget on click (always runs to highlight the widget)
+                element.addEventListener('mousedown', (e) => {
+                    // Only stop propagation if the click is NOT on the textarea itself.
+                    if (e.target.tagName === 'TEXTAREA' || e.target.closest('.widget-text-content') || e.target === trashIcon || e.target === rotateIcon) {
+                        // For textarea, allow default behavior. For icons, handle their click, not drag.
+                        // However, still set as active widget.
+                    } else {
+                        e.stopPropagation(); // Prevent canvas from getting the click if clicking on the widget's "body"
+                        // This prevents starting a canvas drag when clicking on a widget
+                    }
+                    
+                    // Highlight logic
+                    if (currentActiveWidget && currentActiveWidget !== element) {
+                        currentActiveWidget.classList.remove('ring-2', 'ring-blue-500', 'active-widget');
+                        currentActiveWidget.querySelector('.fa-trash-alt')?.classList.add('hidden');
+                        currentActiveWidget.querySelector('.widget-handle')?.classList.add('hidden');
+                        if (currentActiveWidget.dataset.type === 'line') { // Hide rotate icon for old active line
+                            currentActiveWidget.querySelector('.fa-sync-alt')?.classList.add('hidden');
+                        }
+                    }
+                    currentActiveWidget = element;
+                    element.classList.add('ring-2', 'ring-blue-500', 'active-widget'); // Highlight active widget
+                    trashIcon.classList.remove('hidden'); // Ensure trash is visible when active
+                    resizeHandle.classList.remove('hidden'); // Ensure handle is visible when active
+                    if (rotateIcon) rotateIcon.classList.remove('hidden'); // Ensure rotate is visible for line
+
+                    // Drag/Resize Start
+                    if (e.target !== trashIcon && e.target !== rotateIcon && e.target.tagName !== 'TEXTAREA' && !e.target.closest('.widget-text-content')) {
+                        activeDragElement = element;
+                        initialElementX = element.offsetLeft;
+                        initialElementY = element.offsetTop;
+                        initialMouseX = e.clientX || e.touches[0].clientX;
+                        initialMouseY = e.clientY || e.touches[0].clientY;
+                        initialElementWidth = element.offsetWidth;
+                        initialElementHeight = element.offsetHeight;
+
+                        if (e.target === resizeHandle) {
+                            isResizing = true;
+                        } else {
+                            isDragging = true;
+                        }
+
+                        document.addEventListener('mousemove', onGlobalMouseMove);
+                        document.addEventListener('touchmove', onGlobalMouseMove, { passive: false });
+                        document.addEventListener('mouseup', onGlobalMouseUp);
+                        document.addEventListener('touchend', onGlobalMouseUp);
+
+                        e.preventDefault(); // Prevent default browser drag behavior
+                    }
+                });
+
+                // Delete widget on trash icon click
+                trashIcon.addEventListener('click', async (e) => {
+                    e.stopPropagation(); // Prevent triggering widget's mousedown
+                    const confirmed = await showCustomModal('Delete Widget', 'Are you sure you want to delete this widget?');
+                    if (confirmed) {
+                        element.remove();
+                        if (currentActiveWidget === element) {
+                            currentActiveWidget = null;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * Creates a new widget element.
+             * @param {string} type - The type of widget (e.g., 'clock', 'text', 'image', 'log').
+             * @param {string} content - The content for the widget (e.g., image URL, text).
+             * @returns {HTMLElement} The created widget element.
+             */
+            function createWidgetElement(type, content = '') {
+                const widget = document.createElement('div');
+                widget.id = `widget-${widgetCounter++}`;
+                widget.className = 'draggable absolute p-3 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col items-center justify-center'; // Added flex-col for better layout
+                widget.dataset.type = type;
+
+                switch (type) {
+                    case 'clock':
+                        widget.style.width = '128px'; // Default width for clock (w-32)
+                        widget.style.height = '80px';  // Default height for clock (h-20)
+                        widget.innerHTML = `<span class="font-bold text-gray-800" id="clock-display-${widget.id}"></span>`;
+                        setInterval(() => {
+                            const clockElement = document.getElementById(`clock-display-${widget.id}`);
+                            if (clockElement) {
+                                // Display time for Phoenix, Arizona (MST)
+                                clockElement.textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Phoenix' });
+                            }
+                        }, 1000);
+                        resizeObserver.observe(widget); // Observe for resizing
+                        break;
+                    case 'text':
+                        widget.style.width = '192px'; // Default width for text (w-48)
+                        widget.style.height = '96px';  // Default height for text (h-24)
+                        widget.classList.add('p-2');
+                        widget.innerHTML = `<textarea class="widget-text-content w-full h-full p-1 border border-gray-300 rounded-md resize-none text-gray-700" placeholder="Type here..."></textarea>`;
+                        break;
+                    case 'line':
+                        widget.classList.remove('flex', 'flex-col', 'items-center', 'justify-center'); // Lines don't need flex centering
+                        widget.style.width = '160px'; // Default width for line (w-40)
+                        widget.style.height = '16px'; // Default height for line (h-4 converted to px)
+                        widget.style.minWidth = '20px'; // Minimum size for line
+                        widget.style.minHeight = '4px'; // Minimum size for line
+                        widget.style.backgroundColor = '#4a5568'; // Default line color
+                        widget.innerHTML = `<div class="widget-line-content"></div>`; // Inner div to apply color and take full size
+                        widget.style.transform = 'rotate(0deg)'; // Allows rotation if needed later
+                        widget.dataset.rotation = '0'; // Initialize rotation data attribute
+                        break;
+                    case 'weather':
+                        widget.style.width = '224px'; // Increased size for better fit (w-56)
+                        widget.style.height = '144px'; // Increased size for better fit (h-36)
+                        widget.classList.add('p-4'); // Increased padding
+                        widget.innerHTML = `
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-cloud-sun text-6xl text-yellow-500 mb-2"></i>
+                                <span class="text-xl font-semibold text-gray-800 text-center leading-tight" id="weather-condition-${widget.id}">Loading weather...</span>
+                                <span class="text-lg text-gray-600 mt-1" id="weather-temp-${widget.id}"></span>
+                                <span class="text-md text-gray-500 mt-1" id="weather-location-${widget.id}">Phoenix, AZ</span>
+                            </div>
+                        `;
+                        fetchWeatherData(widget.id, 'Phoenix', 'AZ');
+                        break;
+                    case 'temperature':
+                        widget.style.width = '128px'; // Default width for temperature (w-32)
+                        widget.style.height = '80px';  // Default height for temperature (h-20)
+                        widget.classList.add('flex-col');
+                        widget.innerHTML = `
+                            <i class="fas fa-thermometer-half text-4xl text-red-500" id="temp-icon-${widget.id}"></i>
+                            <span class="font-bold text-gray-800 text-center leading-tight" id="temp-value-${widget.id}">Fetching temp...</span>
+                            <span class="text-sm text-gray-500 mt-1" id="temp-location-${widget.id}">Phoenix, AZ</span>
+                        `;
+                        resizeObserver.observe(widget); // Observe for resizing
+                        // Simulate API call delay
+                        setTimeout(() => {
+                            const tempValueElement = document.getElementById(`temp-value-${widget.id}`);
+                            if (tempValueElement) {
+                                tempValueElement.textContent = `85°F`; // Static value for now
+                                adjustTemperatureDisplaySize(widget); // Call initially after content is set
+                            }
+                        }, 2000); // Simulate 2-second delay
+                        break;
+                    case 'image': // This type is now specifically for logos dragged from "Choose Logo"
+                        widget.style.width = '192px'; // Default width for image (w-48)
+                        widget.style.height = '192px'; // Default height for image (h-48)
+                        widget.classList.add('overflow-hidden');
+                        widget.innerHTML = `<img src="${content}" alt="Uploaded Image" class="w-full h-full object-contain rounded-md">`;
+                        break;
+                    case 'edit': // New widget type (pencil icon) - currently a placeholder
+                        widget.style.width = '160px'; // Default width for edit (w-40)
+                        widget.style.height = '160px'; // Default height for edit (h-40)
+                        widget.classList.add('flex-col');
+                        widget.innerHTML = `
+                            <i class="fas fa-pencil-ruler text-4xl text-blue-500 mb-2"></i>
+                            <span class="text-lg font-semibold text-gray-800">Edit Tool</span>
+                            <span class="text-sm text-gray-600">(Placeholder)</span>
+                        `;
+                        break;
+                    case 'log': // Logs are not directly draggable as widgets anymore; they're in the dropdown.
+                        // This case might not be strictly needed if logs are only read and not placed as separate widgets.
+                        // However, if the user might want to drag a "log text box", this remains for future flexibility.
+                        widget.style.width = '256px'; // Default width for log (w-64)
+                        widget.style.height = '192px'; // Default height for log (h-48)
+                        widget.classList.add('p-2', 'overflow-auto');
+                        widget.innerHTML = `<pre class="text-xs text-gray-800 whitespace-pre-wrap">${content}</pre>`;
+                        break;
+                }
+                makeDraggableAndResizable(widget);
+                return widget;
+            }
+
+            // Function to adjust clock font size dynamically
+            function adjustClockFontSize(clockWidgetElement) {
+                const clockDisplay = clockWidgetElement.querySelector(`#clock-display-${clockWidgetElement.id}`);
+                if (!clockDisplay) return;
+
+                // Subtract padding from available width/height
+                const paddingX = parseInt(getComputedStyle(clockWidgetElement).paddingLeft) + parseInt(getComputedStyle(clockWidgetElement).paddingRight);
+                const paddingY = parseInt(getComputedStyle(clockWidgetElement).paddingTop) + parseInt(getComputedStyle(clockWidgetElement).paddingBottom);
+
+                const maxWidth = clockWidgetElement.offsetWidth - paddingX;
+                const maxHeight = clockWidgetElement.offsetHeight - paddingY;
+
+                // Start with a large font size and reduce until it fits
+                let fontSize = 48; // Max initial font size
+                clockDisplay.style.fontSize = `${fontSize}px`;
+                clockDisplay.style.whiteSpace = 'nowrap'; // Prevent wrapping
+
+                // Ensure the text fits within the available width and height
+                while ((clockDisplay.scrollWidth > maxWidth || clockDisplay.scrollHeight > maxHeight) && fontSize > 8) {
+                    fontSize--;
+                    clockDisplay.style.fontSize = `${fontSize}px`;
+                }
+                // Add minimum font size to prevent text from disappearing
+                if (fontSize <= 8) {
+                    clockDisplay.style.fontSize = '8px';
+                }
+            }
+
+            // New function to adjust temperature widget font and icon size dynamically
+            function adjustTemperatureDisplaySize(tempWidgetElement) {
+                const tempIcon = tempWidgetElement.querySelector(`#temp-icon-${tempWidgetElement.id}`);
+                const tempValue = tempWidgetElement.querySelector(`#temp-value-${tempWidgetElement.id}`);
+                const tempLocation = tempWidgetElement.querySelector(`#temp-location-${tempWidgetElement.id}`);
+
+                if (!tempIcon || !tempValue || !tempLocation) return;
+
+                // Get current widget dimensions including padding
+                const widgetWidth = tempWidgetElement.offsetWidth;
+                const widgetHeight = tempWidgetElement.offsetHeight;
+                const paddingX = parseInt(getComputedStyle(tempWidgetElement).paddingLeft) + parseInt(getComputedStyle(tempWidgetElement).paddingRight);
+                const paddingY = parseInt(getComputedStyle(tempWidgetElement).paddingTop) + parseInt(getComputedStyle(tempWidgetElement).paddingBottom);
+
+                const availableWidth = widgetWidth - paddingX;
+                const availableHeight = widgetHeight - paddingY;
+
+                // Calculate ideal sizes based on current widget dimensions
+                // These ratios can be tweaked for better visual balance
+                let idealIconSize = availableHeight * 0.4; // Icon takes up about 40% of height
+                let idealValueSize = availableHeight * 0.3; // Value takes about 30%
+                let idealLocationSize = availableHeight * 0.2; // Location takes about 20%
+
+                // Clamp to reasonable min/max values
+                tempIcon.style.fontSize = `${Math.max(20, Math.min(60, idealIconSize))}px`;
+                tempValue.style.fontSize = `${Math.max(12, Math.min(48, idealValueSize))}px`;
+                tempLocation.style.fontSize = `${Math.max(10, Math.min(20, idealLocationSize))}px`;
+
+                // Use flex-shrink and text-center for better responsiveness within flex container
+                tempValue.style.flexShrink = '1';
+                tempLocation.style.flexShrink = '1';
+                tempValue.style.whiteSpace = 'nowrap';
+                tempLocation.style.whiteSpace = 'nowrap';
+                tempValue.style.overflow = 'hidden';
+                tempLocation.style.overflow = 'hidden';
+                tempValue.style.textOverflow = 'ellipsis';
+                tempLocation.style.textOverflow = 'ellipsis';
+            }
+
+            // Function to simulate fetching weather data
+            async function fetchWeatherData(widgetId, city, state) {
+                const weatherConditionElement = document.getElementById(`weather-condition-${widgetId}`);
+                const weatherTempElement = document.getElementById(`weather-temp-${widgetId}`);
+                const weatherLocationElement = document.getElementById(`weather-location-${widgetId}`);
+
+                // Indicate loading
+                if (weatherConditionElement) weatherConditionElement.textContent = "Loading weather...";
+                if (weatherTempElement) weatherTempElement.textContent = "";
+
+                // Using a dummy API call simulation to generate dynamic text content
+                const dummyApiKey = ""; // Leave as empty string. Canvas will automatically provide it.
+                const dummyApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${dummyApiKey}`;
+
+                // Simulate chat history for dummy API call
+                let chatHistory = [{
+                    role: "user",
+                    parts: [{ text: `Generate a current weather condition and temperature for ${city}, ${state}. Provide a concise condition (e.g., "Sunny", "Partly Cloudy", "Rain"), followed by the temperature in Fahrenheit and Celsius (e.g., "78°F / 25°C"). Respond only with this format, e.g., "Sunny, 78°F / 25°C"` }]
+                }];
+
+                try {
+                    const response = await fetch(dummyApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: chatHistory })
+                    });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const generatedText = result.candidates[0].content.parts[0].text;
+                        const parts = generatedText.split(',');
+                        const condition = parts[0] ? parts[0].trim() : "N/A";
+                        const temp = parts[1] ? parts[1].trim() : "N/A";
+
+                        if (weatherConditionElement) weatherConditionElement.textContent = condition;
+                        if (weatherTempElement) weatherTempElement.textContent = temp;
+                        if (weatherLocationElement) weatherLocationElement.textContent = `${city}, ${state}`;
+                    } else {
+                        console.error('Unexpected API response structure:', result);
+                        if (weatherConditionElement) weatherConditionElement.textContent = "Weather N/A";
+                        if (weatherTempElement) weatherTempElement.textContent = "N/A";
+                        if (weatherLocationElement) weatherLocationElement.textContent = `${city}, ${state}`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    if (weatherConditionElement) weatherConditionElement.textContent = "Error";
+                    if (weatherTempElement) weatherTempElement.textContent = "N/A";
+                    if (weatherLocationElement) weatherLocationElement.textContent = `${city}, ${state}`;
+                }
+            }
+
+
+            // Start dragging a new widget from the sidebar
+            widgetItems.forEach(item => {
+                item.addEventListener('mousedown', (e) => {
+                    // Do not drag if the click is on the file input buttons or "Edit" (which is not a drag-to-canvas item)
+                    if (e.target.closest('#upload-logo-btn') || e.target.closest('#upload-background-btn') || item.id === 'widget-edit') return;
+
+                    const type = item.id.replace('widget-', '');
+                    const newWidget = createWidgetElement(type);
+                    newWidget.style.opacity = '0.7'; // Visual feedback for dragging
+                    newWidget.style.zIndex = '1000'; // Bring to front
+                    newWidget.dataset.fromSidebar = 'true'; // Flag for drop logic
+
+                    document.body.appendChild(newWidget);
+
+                    // Initialize for drag
+                    activeDragElement = newWidget;
+                    initialElementX = newWidget.offsetLeft;
+                    initialElementY = newWidget.offsetTop;
+                    initialMouseX = e.clientX || e.touches[0].clientX;
+                    initialMouseY = e.clientY || e.touches[0].clientY;
+                    initialElementWidth = newWidget.offsetWidth;
+                    initialElementHeight = newWidget.offsetHeight;
+                    isDragging = true;
+
+                    document.addEventListener('mousemove', onGlobalMouseMove);
+                    document.addEventListener('touchmove', onGlobalMouseMove, { passive: false });
+                    document.addEventListener('mouseup', onGlobalMouseUp);
+                    document.addEventListener('touchend', onGlobalMouseUp);
+
+                    e.preventDefault(); // Prevent default browser drag behavior
+                });
+            });
+
+            // --- Handle Logo Upload ---
+            uploadLogoBtn.addEventListener('click', () => {
+                logoUploadInput.click();
+            });
+
+            logoUploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith('image/')) {
+                    showCustomModal('Invalid File', 'Please upload an image file for the logo.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const id = `logo-${Date.now()}`;
+                    uploadedLogos.push({ id, src: e.target.result, name: file.name });
+                    addLogoToDropdown(id, e.target.result, file.name);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            /**
+             * Adds an uploaded logo to the "Choose Logo" dropdown.
+             * @param {string} id - Unique ID of the logo.
+             * @param {string} src - Data URL of the logo image.
+             * @param {string} name - File name.
+             */
+            function addLogoToDropdown(id, src, name) {
+                const placeholder = logoDropdownContent.querySelector('p');
+                if (placeholder) placeholder.remove();
+
+                const logoItem = document.createElement('div');
+                logoItem.className = 'sidebar-dropdown-item';
+                logoItem.dataset.id = id;
+                logoItem.innerHTML = `<img src="${src}" alt="${name}" class="w-8 h-8 object-contain rounded-md mr-2"> <span class="text-sm truncate flex-1">${name}</span>`;
+
+                logoItem.addEventListener('click', () => {
+                    const newWidget = createWidgetElement('image', src); // Reusing 'image' type for logos on canvas
+                    canvas.appendChild(newWidget);
+                    // Center logo for initial placement
+                    newWidget.style.left = `${(canvas.offsetWidth - newWidget.offsetWidth) / 2}px`;
+                    newWidget.style.top = `${(canvas.offsetHeight - newWidget.offsetHeight) / 2}px`;
+                });
+                logoDropdownContent.appendChild(logoItem);
+            }
+
+            // --- Handle Background Upload ---
+            uploadBackgroundBtn.addEventListener('click', () => {
+                backgroundUploadInput.click();
+            });
+
+            backgroundUploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith('image/')) {
+                    showCustomModal('Invalid File', 'Please upload an image file for the background.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const id = `bg-${Date.now()}`;
+                    uploadedBackgrounds.push({ id, src: e.target.result, name: file.name });
+                    addBackgroundToDropdown(id, e.target.result, file.name);
+                    setCanvasBackground(e.target.result); // Automatically apply as background
+                };
+                reader.readAsDataURL(file);
+            });
+
+            /**
+             * Adds an uploaded background image to the "Choose Background" dropdown.
+             * @param {string} id - Unique ID of the background.
+             * @param {string} src - Data URL of the background image.
+             * @param {string} name - File name.
+             */
+            function addBackgroundToDropdown(id, src, name) {
+                const placeholder = uploadedBackgroundsList.querySelector('p');
+                if (placeholder) placeholder.remove();
+
+                const bgItem = document.createElement('div');
+                bgItem.className = 'sidebar-dropdown-item';
+                bgItem.dataset.id = id;
+                bgItem.innerHTML = `<img src="${src}" alt="${name}" class="w-8 h-8 object-cover rounded-md mr-2"> <span class="text-sm truncate flex-1">${name}</span>`;
+
+                bgItem.addEventListener('click', () => {
+                    setCanvasBackground(src);
+                });
+                uploadedBackgroundsList.appendChild(bgItem);
+            }
+
+
+            // --- Canvas Interaction (Clicking outside widget deselects) ---
+            canvas.addEventListener('mousedown', (e) => {
+                // If click is on canvas and not on a widget, deselect current widget
+                if (currentActiveWidget && !e.target.closest('.draggable')) {
+                    currentActiveWidget.classList.remove('ring-2', 'ring-blue-500', 'active-widget');
+                    currentActiveWidget.querySelector('.fa-trash-alt')?.classList.add('hidden');
+                    currentActiveWidget.querySelector('.widget-handle')?.classList.add('hidden');
+                    if (currentActiveWidget.dataset.type === 'line') {
+                        currentActiveWidget.querySelector('.fa-sync-alt')?.classList.add('hidden');
+                    }
+                    currentActiveWidget = null;
+                }
+            });
+
+            // --- Action Buttons ---
+
+            saveScreenBtn.addEventListener('click', async () => {
+                const confirmed = await showCustomModal('Save Preset', 'This will save the current layout as a preset. (Functionality is a placeholder)');
+                if (confirmed) {
+                    // In a real application, you would serialize the canvas state (widget types, positions, content)
+                    // and save it to local storage, a database, or send to a server.
+                    console.log('Save Screen: Functionality to be implemented');
+                    showCustomModal('Preset Saved!', 'Your current workspace layout has been saved as a preset.');
+                }
+            });
+
+            clearScreenBtn.addEventListener('click', async () => {
+                const confirmed = await showCustomModal('Clear Canvas', 'Are you sure you want to clear all widgets from the canvas? This action cannot be undone.');
+                if (confirmed) {
+                    canvas.innerHTML = ''; // Remove all child elements (widgets)
+                    setCanvasBackground(); // Reset background to default (no image, no color)
+                    widgetCounter = 0; // Reset widget counter
+                    uploadedLogos.length = 0; // Clear uploaded logos
+                    logoDropdownContent.innerHTML = '<p class="text-sm text-gray-300">No logos uploaded yet.</p>';
+                    uploadedBackgrounds.length = 0; // Clear uploaded backgrounds
+                    uploadedBackgroundsList.innerHTML = '<p class="text-sm text-gray-300">No backgrounds uploaded yet.</p>';
+                    currentActiveWidget = null;
+                    showCustomModal('Canvas Cleared!', 'All widgets have been removed from the canvas.');
+                }
+            });
+
+            // --- Tab Switching Logic ---
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active state from all buttons and content
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('bg-white', 'shadow', 'text-blue-800');
+                        btn.classList.add('text-white', 'hover:bg-blue-700');
+                    });
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Add active state to clicked button and corresponding content
+                    button.classList.add('bg-white', 'shadow', 'text-blue-800');
+                    button.classList.remove('text-white', 'hover:bg-blue-700');
+
+                    const targetTabId = button.id.replace('tab-', '') + '-tab-content';
+                    document.getElementById(targetTabId).classList.add('active');
+                });
+            });
+
+            // Initial setup: open workspace tab by default
+            document.getElementById('tab-workspace').click();
+            menuToggle.click(); // Open sidebar initially
+        });
+    </script>
+</body>
+</html>
