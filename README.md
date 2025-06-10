@@ -1,2 +1,2 @@
 # FOX-UMD-HTML
-Drafting process for the HTML behind our HTML website
+Drafting process for the HTML behind our FOX UMD website
