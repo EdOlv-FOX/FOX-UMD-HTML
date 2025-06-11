@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Loveables Customization App&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="styles.css"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="flex h-screen bg-gray-100 text-gray-800"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-64 shadow-lg p-4 z-50 overflow-y-auto rounded-r-lg flex flex-col"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex items-center mb-6 px-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;img src="https://placehold.co/40x40/FFFFFF/1A2B7C?text=FOX" alt="FOX Logo" class="h-10 mr-2 rounded-md"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="text-4xl font-extrabold"&gt;FOX&lt;/span&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-sm text-gray-300 mb-6 text-center bubbly-font"&gt;Under Monitor Display Configuration&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid grid-cols-2 gap-4 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-text" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-text-height text-3xl mb-2"&gt;&lt;/i&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Text&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-clock" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-clock text-3xl mb-2"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Clock&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-line" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-grip-lines text-3xl mb-2"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Line&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-weather" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-cloud-sun text-3xl mb-2"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Weather&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-temperature" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-map-pin text-3xl mb-2"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Temp&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="widget-edit" class="widget-item p-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-lg shadow-md flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-pencil-alt text-3xl mb-2"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-sm font-semibold"&gt;Edit&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="space-y-3 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="upload-logo-btn" class="sidebar-upload-btn"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-upload mr-2"&gt;&lt;/i&gt; Upload LOGO</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="file" id="logo-upload-input" class="hidden" accept="image/*"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="upload-background-btn" class="sidebar-upload-btn"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-upload mr-2"&gt;&lt;/i&gt; Upload BACKGROUND</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="file" id="background-upload-input" class="hidden" accept="image/*"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="logo-dropdown-toggle" class="sidebar-dropdown-toggle"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Choose Logo</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-chevron-down ml-2 transform rotate-0 transition-transform duration-200 ease-in-out"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="logo-dropdown-content" class="hidden sidebar-dropdown-content"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-sm text-gray-300"&gt;No logos uploaded yet.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="background-dropdown-toggle" class="sidebar-dropdown-toggle"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Choose Background</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-chevron-down ml-2 transform rotate-0 transition-transform duration-200 ease-in-out"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="background-dropdown-content" class="hidden sidebar-dropdown-content"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex flex-wrap gap-2 mb-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#93c5fd"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#86efac"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#fcd34d"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#d8b4fe"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#fbcfe8"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="bg-white bg-opacity-30 w-10 h-10 rounded-full shadow-md hover:ring-2 ring-white" data-color="#d1d5db"&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mt-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="custom-bg-color" class="block text-sm font-medium text-gray-300 mb-1"&gt;Custom Color:&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="color" id="custom-bg-color" value="#ffffff" class="w-full h-10 rounded-md border border-gray-300 cursor-pointer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="remove-bg-filter-btn" class="sidebar-upload-btn mt-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fas fa-ban mr-2"&gt;&lt;/i&gt; Remove Background</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="uploaded-backgrounds-list" class="mt-4 border-t border-blue-600 pt-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-gray-300"&gt;No backgrounds uploaded yet.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-auto flex flex-col space-y-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="save-screen-btn" class="p-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-md shadow-lg transition-colors duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Save Preset</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="clear-screen-btn" class="p-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-md shadow-lg transition-colors duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Clear Screen</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="flex-1 flex flex-col ml-0 transition-all duration-300 ease-in-out" id="main-content-area"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="bg-blue-800 shadow-md p-4 flex items-center rounded-bl-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="menu-toggle" class="p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ease-in-out mr-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fas fa-bars text-xl text-white"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex space-x-1 bg-blue-900 p-1 rounded-lg shadow-inner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="tab-workspace" class="tab-button px-5 py-2 text-md font-semibold text-blue-800 rounded-md transition-all duration-200 ease-in-out bg-white shadow"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Preview</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="tab-background" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Background</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="tab-presets" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Presets</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="tab-room" class="tab-button px-5 py-2 text-md font-semibold text-white rounded-md hover:bg-blue-700 transition-all duration-200 ease-in-out"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Room</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;main class="flex-1 relative overflow-hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="workspace-tab-content" class="tab-content active h-full w-full bg-white rounded-lg shadow-xl overflow-hidden relative border border-gray-200 p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="canvas" class="h-full w-full relative overflow-hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="background-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold mb-4 text-center text-indigo-700"&gt;Background Selection&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-gray-600 text-center"&gt;Here you can select and manage backgrounds. Use the sidebar to upload new ones.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="presets-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold mb-4 text-center text-indigo-700"&gt;Saved Presets&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="presets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-gray-50 p-6 rounded-lg shadow-md text-center text-gray-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;No presets saved yet. Save your current workspace to see it here!&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="room-tab-content" class="tab-content h-full w-full bg-white rounded-lg shadow-xl p-6 overflow-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold mb-4 text-center text-indigo-700"&gt;Room Collaboration&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-gray-600 text-center"&gt;This section is under development and will support collaborative features.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/main&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="custom-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3 id="modal-title" class="text-xl font-bold mb-4"&gt;&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p id="modal-message" class="mb-6"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex justify-center space-x-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="modal-cancel-btn" class="px-5 py-2 bg-gray-300 hover:bg-gray-400 rounded-md font-semibold transition-colors duration-200"&gt;Cancel&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="modal-confirm-btn" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-semibold transition-colors duration-200"&gt;Confirm&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="script.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
